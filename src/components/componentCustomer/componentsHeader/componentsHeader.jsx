@@ -8,7 +8,7 @@ import useAuth from "../../../utils/hook/useAuth";
 import { logout } from "../../../contexts/AuthContext/reducer";
 import { FaUser } from "react-icons/fa"; // Đổi sang icon người dùng
 import { FaBars } from "react-icons/fa";
-import PRE from "../../../assets/asstetsCustomer/react.svg";
+import PRE from "../../../assets/asstetsCustomer/HeartPicture.png";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { getWalletByUserId } from "../../../pages/pagesCustomer/customerServices";
@@ -47,6 +47,7 @@ function ComponentsHeader() {
       style={{ height: "100px" }}
     >
       <Container>
+        {/* Align Navbar.Brand to the left */}
         <Navbar.Brand
           href="/customer-home"
           className="fw-bold d-flex align-items-center"
@@ -61,31 +62,29 @@ function ComponentsHeader() {
           <h2 className="title"> PRE MARITIAL 2025</h2>
         </Navbar.Brand>
 
-        {/* Nút mở menu trên mobile */}
+        {/* Toggle button for mobile */}
         <Navbar.Toggle aria-controls="basic-navbar-nav">
           <FaBars size={24} />
         </Navbar.Toggle>
 
+        {/* Navigation links and user dropdown */}
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            {/* mới thêm */}
+            {" "}
+            {/* Push navigation links to the right */}
             <Nav.Link as={NavLink} to="/customer-home/view-articles">
               Articles
             </Nav.Link>
-
             <Nav.Link as={NavLink} to="/customer-home/view-therapists">
               Therapists
             </Nav.Link>
-
             <Nav.Link as={NavLink} to="/customer-home/view-bookings">
               Bookings
             </Nav.Link>
-
             <Nav.Link as={NavLink} to="/user/quizzes">
               Quizzes
             </Nav.Link>
-
-            {/* Dropdown User */}
+            {/* User dropdown */}
             <NavDropdown
               title={
                 <div style={{ display: "flex", alignItems: "center" }}>
@@ -101,8 +100,7 @@ function ComponentsHeader() {
                           color: "#28a745", // Green color for balance
                         }}
                       >
-                        {walletBalance.toFixed(2)}VND{" "}
-                        {/* Display wallet balance */}
+                        {walletBalance.toFixed(2)}VND
                       </span>
                     </>
                   )}

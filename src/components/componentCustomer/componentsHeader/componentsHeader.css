@@ -1,4 +1,4 @@
-.nav-header {
+/* .nav-header {
   background-color: #fff;
   padding: 10px 0;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -37,15 +37,66 @@
   white-space: nowrap;
   overflow: hidden;
   font-family: monospace;
-  max-width: 0;
-  animation: typing 5s steps(20) infinite alternate-reverse;
+} */
+
+.nav-header {
+  background-color: #fff;
+  padding: 15px 20px; /* Add padding for better spacing */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  height: auto; /* Adjust height dynamically */
 }
 
-@keyframes typing {
-  from {
-    max-width: 0;
-  }
-  to {
-    max-width: 100%;
-  }
+.navbar {
+  display: flex;
+  justify-content: space-between; /* Space out brand, nav links, and user dropdown */
+  align-items: center; /* Align items vertically */
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Add spacing between logo and title */
+}
+
+.navbar-brand img {
+  width: 50px;
+  height: 50px;
+}
+
+.navbar-brand h2 {
+  font-size: 24px;
+  font-family: "Monospace", sans-serif;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Add spacing between navigation links */
+}
+
+.navbar-nav .nav-link {
+  font-weight: bold;
+  padding: 10px 15px;
+  color: #000;
+  text-decoration: none;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #007bff;
+}
+
+.user-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Add spacing between username and wallet balance */
+}
+
+.user-dropdown span {
+  font-weight: bold;
+}
+
+.user-dropdown .wallet-balance {
+  color: #28a745;
 }

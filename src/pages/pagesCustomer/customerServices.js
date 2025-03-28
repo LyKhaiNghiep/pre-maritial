@@ -366,6 +366,26 @@ export const createWallet = async (walletData) => {
 };
 
 //===========================TherapistSchedules===========================
+//get schedule
+export const getTherapistSchedules = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/therapistSchedules`, {
+      params: {
+        page: 1,
+        size: 99,
+        sort: "id",
+        direction: "ASC",
+      },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token for authentication
+      },
+    });
+    return response.data; // Return the API response
+  } catch (error) {
+    console.error("Error fetching therapist schedules:", error);
+    throw error;
+  }
+};
 //update schedule
 export const updateSchedule = async (scheduleId, payload) => {
   try {
@@ -445,6 +465,26 @@ export const createConsultationBooking = async (payload) => {
     return response.data; // Return the API response
   } catch (error) {
     console.error("Error creating consultation booking:", error);
+    throw error;
+  }
+};
+//Lấy danh sách lịch hẹn tư vấn
+export const getBookings = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/consultationBookings`, {
+      params: {
+        page: 1,
+        size: 999,
+        sort: "id",
+        direction: "DESC",
+      },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token for authentication
+      },
+    });
+    return response.data; // Return the API response
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
     throw error;
   }
 };

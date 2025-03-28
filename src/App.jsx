@@ -71,6 +71,7 @@ import QuizSession from "./pages/pagesUser/QuizSession";
 import QuizHistory from "./pages/pagesUser/QuizHistory";
 
 import ConfirmBookingPage from "./pages/pagesCustomer/confirmBookingPage/ConfirmBookingPage";
+import ViewBookingsPage from "./pages/pagesCustomer/viewBookingsPage/ViewBookingsPage";
 const App = () => {
   return (
     <GlobalProvider>
@@ -120,6 +121,10 @@ const App = () => {
               <Route
                 path="articles/:articleId/parts"
                 element={<ArticlePartsPage />}
+              />
+              <Route
+                path="/customer-home/view-bookings"
+                element={<ViewBookingsPage />}
               />
               <Route
                 path="/customer-home/view-therapists/schedule/:therapistId"
