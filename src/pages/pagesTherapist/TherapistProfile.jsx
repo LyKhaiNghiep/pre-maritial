@@ -1,7 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Paper, TextField, Button, Switch, CircularProgress, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Paper,
+  TextField,
+  Button,
+  Switch,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Divider,
+  Grid,
+} from "@mui/material";
 import { toast } from "react-toastify";
 import useAuth from "../../utils/hook/useAuth";
+import { AccountTree, Person, School, CalendarToday, MonetizationOn, ToggleOn, Edit, Save, Cancel } from "@mui/icons-material";
+import { getProfile } from "./therapistServices";
 
 // TherapistProfile.jsx
 // This component displays and allows editing of a therapist's profile.
@@ -27,7 +43,9 @@ const TherapistProfile = () => {
     therapistCertificationName: "",
     certificationIssuedBy: "",
     certificationIssueDate: "",
+    certificationExpirationDate: "",
     specialty: "",
+    treatmentCost: 0,
     active: true,
     version: 0,
   });
@@ -40,7 +58,9 @@ const TherapistProfile = () => {
       therapistCertificationName: "dsadsdasd",
       certificationIssuedBy: "Not set",
       certificationIssueDate: "2025-03-27",
+      certificationExpirationDate: "2030-03-27",
       therapistMajorId: 1,
+      treatmentCost: 7000,
       active: true,
       version: 0,
     },
@@ -53,41 +73,31 @@ const TherapistProfile = () => {
 
   // Simulate fetching therapists and setting the therapistId
   useEffect(() => {
-    // Simulate a delay to mimic API call
-    setTimeout(() => {
-      const therapists = mockTherapists;
-      const majors = mockMajors;
-
-      if (therapists.length > 0 && user) {
-        console.log("User:", user);
-        console.log("Mock Therapists:", therapists);
-        const currentTherapist = therapists.find(
-          (therapist) => therapist.userId === user.id
-        );
-        console.log("Current Therapist:", currentTherapist);
-        if (currentTherapist) {
-          const major = majors.find((m) => m.id === currentTherapist.therapistMajorId);
-          setTherapistId(currentTherapist.userId);
+    const getTherapistProfile = async () => {
+      const account = localStorage.getItem("user");
+      if (account) {
+        const data = JSON.parse(account);
+        const response = await getProfile(data.id);
+        if (response.status === 200) {
           setProfile({
-            bio: currentTherapist.bio || "Not set",
-            therapistCertificationName: currentTherapist.therapistCertificationName || "Not set",
-            certificationIssuedBy: currentTherapist.certificationIssuedBy || "Not set",
-            certificationIssueDate: currentTherapist.certificationIssueDate || "Not set",
-            specialty: major ? major.name : "Not set",
-            active: currentTherapist.active !== undefined ? currentTherapist.active : true,
-            version: currentTherapist.version || 0,
+            bio: response.data.bio || "",
+            therapistCertificationName: response.data.therapistCertificationName || "",
+            certificationIssuedBy: response.data.certificationIssuedBy || "",
+            certificationIssueDate: response.data.certificationIssueDate || "",
+            certificationExpirationDate: response.data.certificationExpirationDate || "",
+            specialty: mockMajors.find((m) => m.id === response.data.therapistMajorId)?.name || "",
+            treatmentCost: response.data.treatmentCost || 0,
+            active: response.data.isActive !== undefined ? response.data.isActive : true,
+            version: response.data.version || 0,
           });
-        } else {
-          console.log("Current therapist not found!");
+          setTherapistId(data.id);
+          console.log(response.data);
         }
-      } else {
-        console.log("Therapists array is empty or user is not set!");
-        console.log("Therapists length:", therapists.length);
-        console.log("User:", user);
       }
       setLoading(false);
-    }, 1000);
-  }, [user]);
+    };
+    getTherapistProfile();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -119,7 +129,9 @@ const TherapistProfile = () => {
       therapistCertificationName: profile.therapistCertificationName,
       certificationIssuedBy: profile.certificationIssuedBy,
       certificationIssueDate: profile.certificationIssueDate,
+      certificationExpirationDate: profile.certificationExpirationDate,
       therapistMajorId: major ? major.id : null,
+      treatmentCost: parseFloat(profile.treatmentCost),
       active: profile.active,
       version: profile.version,
     };
@@ -165,7 +177,9 @@ const TherapistProfile = () => {
       therapistCertificationName: updatedData.therapistCertificationName || "Not set",
       certificationIssuedBy: updatedData.certificationIssuedBy || "Not set",
       certificationIssueDate: updatedData.certificationIssueDate || "Not set",
+      certificationExpirationDate: updatedData.certificationExpirationDate || "Not set",
       specialty: major ? major.name : "Not set",
+      treatmentCost: updatedData.treatmentCost || 0,
       active: updatedData.active !== undefined ? updatedData.active : true,
       version: updatedData.version || 0,
     });
@@ -176,116 +190,333 @@ const TherapistProfile = () => {
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", padding: 3 }}>
-        <CircularProgress />
+      <Box
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100vh",
+          background: "rgba(255, 255, 255, 0.9)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000,
+        }}
+      >
+        <CircularProgress size={50} sx={{ color: "#1976d2", mb: 2 }} />
+        <Typography variant="h6" sx={{ color: "#1976d2" }}>
+          Loading Profile...
+        </Typography>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ padding: 3, maxWidth: 600, margin: "0 auto" }}>
-      <Typography variant="h4" gutterBottom>
-        Chào mừng, {user?.username}!
-      </Typography>
-      <Paper elevation={3} sx={{ padding: 3, marginTop: 2 }}>
-        <Typography variant="h5" gutterBottom>
-          My Profile
-        </Typography>
-        {isEditing ? (
-          <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <TextField
-              label="Bio"
-              name="bio"
-              value={profile.bio}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-              required
-            />
-            <TextField
-              label="Certification Name"
-              name="therapistCertificationName"
-              value={profile.therapistCertificationName}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-              required
-            />
-            <TextField
-              label="Certification Issued By"
-              name="certificationIssuedBy"
-              value={profile.certificationIssuedBy}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-            <TextField
-              label="Certification Issue Date (YYYY-MM-DD)"
-              name="certificationIssueDate"
-              value={profile.certificationIssueDate}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-            <FormControl fullWidth required>
-              <InputLabel>Specialty</InputLabel>
-              <Select
-                name="specialty"
-                value={profile.specialty}
+    <Box
+      sx={{
+        padding: { xs: 2, md: 4 },
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #f0f4f8 0%, #e1e8ee 100%)",
+        fontFamily: "'Poppins', sans-serif",
+      }}
+    >
+      <Box sx={{ maxWidth: 800, margin: "0 auto" }}>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
+          <Person sx={{ fontSize: 40, color: "#1976d2", mr: 2 }} />
+          <Typography
+            variant="h4"
+            sx={{
+              color: "#2c3e50",
+              fontWeight: 600,
+              letterSpacing: "1px",
+            }}
+          >
+            Chào mừng, {user?.username}!
+          </Typography>
+        </Box>
+        <Paper
+          elevation={6}
+          sx={{
+            padding: { xs: 2, md: 4 },
+            borderRadius: "12px",
+            background: "#ffffff",
+            boxShadow: "0 6px 12px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+            <AccountTree sx={{ fontSize: 30, color: "#1976d2", mr: 1 }} />
+            <Typography
+              variant="h5"
+              sx={{
+                color: "#2c3e50",
+                fontWeight: 500,
+              }}
+            >
+              My Profile
+            </Typography>
+          </Box>
+          <Divider sx={{ mb: 3, borderColor: "#e0e0e0" }} />
+          {isEditing ? (
+            <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              <TextField
+                label="Bio"
+                name="bio"
+                value={profile.bio}
                 onChange={handleChange}
-                label="Specialty"
-              >
-                {mockMajors.map((major) => (
-                  <MenuItem key={major.id} value={major.name}>
-                    {major.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Typography>Active:</Typography>
-              <Switch
-                checked={profile.active}
-                onChange={handleActiveChange}
-                name="active"
+                variant="outlined"
+                fullWidth
+                required
+                multiline
+                rows={3}
+                InputLabelProps={{ style: { color: "#666" } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": { borderColor: "#e0e0e0" },
+                    "&:hover fieldset": { borderColor: "#1976d2" },
+                    "&.Mui-focused fieldset": { borderColor: "#1976d2" },
+                  },
+                }}
               />
+              <Box sx={{ border: "1px solid #e0e0e0", borderRadius: "8px", p: 3, background: "#fafafa" }}>
+                <Typography variant="h6" sx={{ mb: 2, color: "#2c3e50", fontWeight: 500 }}>
+                  Certification Details
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Certification Name"
+                      name="therapistCertificationName"
+                      value={profile.therapistCertificationName}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                      required
+                      InputLabelProps={{ style: { color: "#666" } }}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": { borderColor: "#e0e0e0" },
+                          "&:hover fieldset": { borderColor: "#1976d2" },
+                          "&.Mui-focused fieldset": { borderColor: "#1976d2" },
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Certification Issued By"
+                      name="certificationIssuedBy"
+                      value={profile.certificationIssuedBy}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                      InputLabelProps={{ style: { color: "#666" } }}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": { borderColor: "#e0e0e0" },
+                          "&:hover fieldset": { borderColor: "#1976d2" },
+                          "&.Mui-focused fieldset": { borderColor: "#1976d2" },
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Certification Issue Date (YYYY-MM-DD)"
+                      name="certificationIssueDate"
+                      value={profile.certificationIssueDate}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                      InputLabelProps={{ style: { color: "#666" } }}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": { borderColor: "#e0e0e0" },
+                          "&:hover fieldset": { borderColor: "#1976d2" },
+                          "&.Mui-focused fieldset": { borderColor: "#1976d2" },
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Certification Expiration Date (YYYY-MM-DD)"
+                      name="certificationExpirationDate"
+                      value={profile.certificationExpirationDate}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                      InputLabelProps={{ style: { color: "#666" } }}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": { borderColor: "#e0e0e0" },
+                          "&:hover fieldset": { borderColor: "#1976d2" },
+                          "&.Mui-focused fieldset": { borderColor: "#1976d2" },
+                        },
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+              <FormControl fullWidth required>
+                <InputLabel sx={{ color: "#666" }}>Specialty</InputLabel>
+                <Select
+                  name="specialty"
+                  value={profile.specialty}
+                  onChange={handleChange}
+                  label="Specialty"
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": { borderColor: "#e0e0e0" },
+                    "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#1976d2" },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#1976d2" },
+                  }}
+                >
+                  {mockMajors.map((major) => (
+                    <MenuItem key={major.id} value={major.name}>
+                      {major.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <TextField
+                label="Treatment Cost (VND)"
+                name="treatmentCost"
+                type="number"
+                value={profile.treatmentCost}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                InputLabelProps={{ style: { color: "#666" } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": { borderColor: "#e0e0e0" },
+                    "&:hover fieldset": { borderColor: "#1976d2" },
+                    "&.Mui-focused fieldset": { borderColor: "#1976d2" },
+                  },
+                }}
+              />
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <ToggleOn sx={{ color: "#1976d2" }} />
+                <Typography sx={{ color: "#2c3e50" }}>Active:</Typography>
+                <Switch
+                  checked={profile.active}
+                  onChange={handleActiveChange}
+                  name="active"
+                  sx={{
+                    "& .MuiSwitch-switchBase.Mui-checked": {
+                      color: "#1976d2",
+                    },
+                    "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                      backgroundColor: "#1976d2",
+                    },
+                  }}
+                />
+              </Box>
+              <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSave}
+                  startIcon={<Save />}
+                  sx={{
+                    backgroundColor: "#1976d2",
+                    "&:hover": { backgroundColor: "#1565c0", transform: "scale(1.02)" },
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  Save
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => setIsEditing(false)}
+                  startIcon={<Cancel />}
+                  sx={{
+                    borderColor: "#e57373",
+                    color: "#e57373",
+                    "&:hover": { borderColor: "#d32f2f", color: "#d32f2f", transform: "scale(1.02)" },
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Box>
             </Box>
-            <Box sx={{ display: "flex", gap: 2 }}>
+          ) : (
+            <Box>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                    <Person sx={{ color: "#1976d2", mr: 1 }} />
+                    <Typography sx={{ color: "#2c3e50" }}>
+                      <strong>Bio:</strong> {profile.bio}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                    <School sx={{ color: "#1976d2", mr: 1 }} />
+                    <Typography sx={{ color: "#2c3e50" }}>
+                      <strong>Certification Name:</strong> {profile.therapistCertificationName}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                    <School sx={{ color: "#1976d2", mr: 1 }} />
+                    <Typography sx={{ color: "#2c3e50" }}>
+                      <strong>Certification Issued By:</strong> {profile.certificationIssuedBy}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                    <CalendarToday sx={{ color: "#1976d2", mr: 1 }} />
+                    <Typography sx={{ color: "#2c3e50" }}>
+                      <strong>Certification Issue Date:</strong> {profile.certificationIssueDate}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                    <CalendarToday sx={{ color: "#1976d2", mr: 1 }} />
+                    <Typography sx={{ color: "#1976d2" }}>
+                      <strong>Certification Expiration Date:</strong> {profile.certificationExpirationDate}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                    <School sx={{ color: "#1976d2", mr: 1 }} />
+                    <Typography sx={{ color: "#2c3e50" }}>
+                      <strong>Specialty:</strong> {profile.specialty}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                    <MonetizationOn sx={{ color: "#1976d2", mr: 1 }} />
+                    <Typography sx={{ color: "#2c3e50" }}>
+                      <strong>Treatment Cost:</strong> {profile.treatmentCost} VND
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                    <ToggleOn sx={{ color: "#1976d2", mr: 1 }} />
+                    <Typography sx={{ color: "#2c3e50" }}>
+                      <strong>Active:</strong> {profile.active ? "Yes" : "No"}
+                    </Typography>
+                  </Box>
+                </Grid>
+              </Grid>
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleSave}
+                onClick={() => setIsEditing(true)}
+                startIcon={<Edit />}
+                sx={{
+                  mt: 3,
+                  backgroundColor: "#1976d2",
+                  "&:hover": { backgroundColor: "#1565c0", transform: "scale(1.02)" },
+                  transition: "all 0.3s ease",
+                }}
               >
-                Save
-              </Button>
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={() => setIsEditing(false)}
-              >
-                Cancel
+                Edit Profile
               </Button>
             </Box>
-          </Box>
-        ) : (
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            <Typography><strong>Bio:</strong> {profile.bio}</Typography>
-            <Typography><strong>Certification Name:</strong> {profile.therapistCertificationName}</Typography>
-            <Typography><strong>Certification Issued By:</strong> {profile.certificationIssuedBy}</Typography>
-            <Typography><strong>Certification Issue Date:</strong> {profile.certificationIssueDate}</Typography>
-            <Typography><strong>Specialty:</strong> {profile.specialty}</Typography>
-            <Typography><strong>Active:</strong> {profile.active ? "Yes" : "No"}</Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setIsEditing(true)}
-              sx={{ marginTop: 2, width: "fit-content" }}
-            >
-              Edit Profile
-            </Button>
-          </Box>
-        )}
-      </Paper>
+          )}
+        </Paper>
+      </Box>
     </Box>
   );
 };

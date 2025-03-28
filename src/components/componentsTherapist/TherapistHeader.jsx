@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom"; // Add useNavigate
 import {
   AppBar,
   Toolbar,
@@ -24,6 +24,9 @@ const TherapistHeader = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
+  // Use navigate for redirecting after logout
+  const navigate = useNavigate();
+
   // Handle profile icon click to open/close dropdown
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -33,11 +36,16 @@ const TherapistHeader = () => {
     setAnchorEl(null);
   };
 
-  // Handle logout (mock function, replace with actual logout logic)
+  // Handle logout
   const handleLogout = () => {
-    console.log("Logging out...");
-    // Add actual logout logic here (e.g., clear auth token, redirect to login)
+    // Clear the auth token from localStorage
+    localStorage.removeItem("authToken");
+
+    // Close the dropdown
     handleProfileClose();
+
+    // Redirect to the login page
+    navigate("/login");
   };
 
   // Get current route to set dynamic header text
