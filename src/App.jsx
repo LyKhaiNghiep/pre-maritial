@@ -65,6 +65,11 @@ import CreateArticle from "./pages/pagesAdmin/CreateArticle";
 import ArticlePartsPage from "./pages/pagesCustomer/articlePartsPage/ArticlePartsPage";
 import ViewWallet from "./pages/pagesCustomer/View_Wallet/View_Wallet";
 import TransactionHistory from "./pages/pagesCustomer/transactionHistory/TransactionHistory";
+
+import UserQuizzes from './pages/pagesUser/UserQuizzes';
+import QuizSession from './pages/pagesUser/QuizSession';
+import QuizHistory from './pages/pagesUser/QuizHistory';
+
 const App = () => {
   return (
     <GlobalProvider>
@@ -162,6 +167,10 @@ const App = () => {
             <Route path="/therapist-home/articles" element={<TherapistArticles />} />
             <Route path="/therapist-home/articles/:id" element={<TherapistArticleDetail />} />
           </Route>
+
+          <Route path="/user/quizzes" element={<UserQuizzes />} />
+          <Route path="/user/quiz/:quizId" element={<QuizSession />} />
+          <Route path="/user/quiz-history" element={<QuizHistory />} />
 
           {/* Mặc định chuyển hướng về customer nếu route không tồn tại */}
           <Route path="*" element={<Navigate to="/login" />} />
