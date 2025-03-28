@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getArticles, getUsers } from "../customerServices";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import "./View_Article.css";
 
-// // Import images
+// Import images
 import ar1 from "../../../assets/asstetsCustomer/ar1.jpg";
 import ar2 from "../../../assets/asstetsCustomer/ar2.jpg";
 import ar3 from "../../../assets/asstetsCustomer/ar3.jpg";
@@ -49,6 +51,7 @@ const ArticlesPage = () => {
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -66,7 +69,7 @@ const ArticlesPage = () => {
     return (
       <div className="loading-container">
         <div className="spinner"></div>
-        <p>Loading articles...</p>
+        <p className="loading-text">Loading articles...</p>
       </div>
     );
 
@@ -83,18 +86,36 @@ const ArticlesPage = () => {
               className="article-item"
               onClick={() => handleArticleClick(article.id, article.title)}
             >
-              <img
-                src={getRandomImage()}
-                alt="Article"
-                className="article-image"
-              />
-              <h3 className="article-title">{article.title}</h3>
-              <p className="article-content">{article.content}</p>
-              <small className="article-author">
-                {authors[article.approvedUserId]
-                  ? `Authored by ${authors[article.approvedUserId]}`
-                  : "Author unknown"}
-              </small>
+              <div className="article-image-container">
+                <img
+                  src={getRandomImage()}
+                  alt="Article"
+                  className="article-image"
+                />
+                <div className="image-overlay">
+                  <span className="read-more-text">Read More</span>
+                </div>
+              </div>
+              <div className="article-content-container">
+                <h3 className="article-title">{article.title}</h3>
+                <p className="article-content">{article.content}</p>
+                <div className="article-meta">
+                  <small className="article-author">
+                    {authors[article.approvedUserId]
+                      ? `By ${authors[article.approvedUserId]}`
+                      : "Author unknown"}
+                  </small>
+                  {article.createdDate && (
+                    <small className="article-date">
+                      {new Date(article.createdDate).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </small>
+                  )}
+                </div>
+              </div>
             </li>
           ))}
         </ul>
@@ -105,6 +126,7 @@ const ArticlesPage = () => {
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
+          <ArrowBackIosIcon className="pagination-icon" />
           Previous Page
         </button>
         <span className="pagination-info">
@@ -116,6 +138,7 @@ const ArticlesPage = () => {
           disabled={currentPage === totalPages}
         >
           Next Page
+          <ArrowForwardIosIcon className="pagination-icon" />
         </button>
       </div>
     </div>
