@@ -184,6 +184,24 @@ export const updateMajor = async (majorId, majorData) => {
 };
 
 //===========================Transactions===========================
+
+export const getTransactionsByWalletId = async (walletId, params) => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/transactions/wallet/${walletId}`,
+      {
+        params, // Pass query parameters (page, size, sort, direction)
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token for authentication
+        },
+      }
+    );
+    return response.data; // Return the API response
+  } catch (error) {
+    console.error("Error fetching transactions by wallet ID:", error);
+    throw error;
+  }
+};
 //Lấy danh sách transactions
 export const getTransactions = async () => {
   try {
