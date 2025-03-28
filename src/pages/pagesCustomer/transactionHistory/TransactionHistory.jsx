@@ -33,7 +33,7 @@ const TransactionHistory = () => {
             page: 1,
             size: 99,
             sort: "id",
-            direction: "ASC",
+            direction: "DESC",
           });
 
           setTransactions(response.content || []); // Set the transactions in state
