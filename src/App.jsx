@@ -66,10 +66,11 @@ import ArticlePartsPage from "./pages/pagesCustomer/articlePartsPage/ArticlePart
 import ViewWallet from "./pages/pagesCustomer/View_Wallet/View_Wallet";
 import TransactionHistory from "./pages/pagesCustomer/transactionHistory/TransactionHistory";
 
-import UserQuizzes from './pages/pagesUser/UserQuizzes';
-import QuizSession from './pages/pagesUser/QuizSession';
-import QuizHistory from './pages/pagesUser/QuizHistory';
+import UserQuizzes from "./pages/pagesUser/UserQuizzes";
+import QuizSession from "./pages/pagesUser/QuizSession";
+import QuizHistory from "./pages/pagesUser/QuizHistory";
 
+import ConfirmBookingPage from "./pages/pagesCustomer/confirmBookingPage/ConfirmBookingPage";
 const App = () => {
   return (
     <GlobalProvider>
@@ -124,6 +125,7 @@ const App = () => {
                 path="/customer-home/view-therapists/schedule/:therapistId"
                 element={<ScheduleTherapist />}
               />
+              <Route path="confirm-booking" element={<ConfirmBookingPage />} />
             </Route>
           </Route>
 
@@ -157,15 +159,40 @@ const App = () => {
           {/* Route cho Therapist */}
           <Route element={<TherapistApp />}>
             <Route path="/therapist-home" element={<PagesTherapist />} />
-            <Route path="/therapist-home/profile" element={<TherapistProfile />} />
-            <Route path="/therapist-home/wallet" element={<TherapistWallet />} />
-            <Route path="/therapist-home/withdrawn-requests" element={<TherapistWithdrawnRequests />} />
-            <Route path="/therapist-home/transaction-history" element={<TherapistTransactionHistory />} />
-            <Route path="/therapist-home/notifications" element={<TherapistNotifications />} /> {/* Add this route */}
-            <Route path="/therapist-home/schedule" element={<TherapistBookings />} />
+            <Route
+              path="/therapist-home/profile"
+              element={<TherapistProfile />}
+            />
+            <Route
+              path="/therapist-home/wallet"
+              element={<TherapistWallet />}
+            />
+            <Route
+              path="/therapist-home/withdrawn-requests"
+              element={<TherapistWithdrawnRequests />}
+            />
+            <Route
+              path="/therapist-home/transaction-history"
+              element={<TherapistTransactionHistory />}
+            />
+            <Route
+              path="/therapist-home/notifications"
+              element={<TherapistNotifications />}
+            />{" "}
+            {/* Add this route */}
+            <Route
+              path="/therapist-home/schedule"
+              element={<TherapistBookings />}
+            />
             <Route path="/therapist-home/quiz" element={<TherapistQuiz />} />
-            <Route path="/therapist-home/articles" element={<TherapistArticles />} />
-            <Route path="/therapist-home/articles/:id" element={<TherapistArticleDetail />} />
+            <Route
+              path="/therapist-home/articles"
+              element={<TherapistArticles />}
+            />
+            <Route
+              path="/therapist-home/articles/:id"
+              element={<TherapistArticleDetail />}
+            />
           </Route>
 
           <Route path="/user/quizzes" element={<UserQuizzes />} />

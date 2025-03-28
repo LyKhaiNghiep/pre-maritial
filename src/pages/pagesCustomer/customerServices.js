@@ -427,3 +427,24 @@ export const updateWalletBalance = async (walletId, balance) => {
     throw error;
   }
 };
+
+//===========================Consultation===========================
+//tao lịch hẹn tư vấn
+export const createConsultationBooking = async (payload) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/consultationBookings`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token for authentication
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data; // Return the API response
+  } catch (error) {
+    console.error("Error creating consultation booking:", error);
+    throw error;
+  }
+};
