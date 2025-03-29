@@ -109,7 +109,6 @@ const QuizHistory = () => {
               <TableRow>
                 <TableCell>Quiz Name</TableCell>
                 <TableCell>Date Completed</TableCell>
-                <TableCell>Score</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -119,13 +118,6 @@ const QuizHistory = () => {
                   <TableRow>
                     <TableCell>{item.title}</TableCell>
                     <TableCell>{formatDate(item.attemptedTime)}</TableCell>
-                    <TableCell>
-                      <Chip
-                        label={`${item.quizPoint || 0} points`}
-                        color="primary"
-                        variant="outlined"
-                      />
-                    </TableCell>
                     <TableCell>
                       <Button
                         size="small"
@@ -150,7 +142,7 @@ const QuizHistory = () => {
                         </Typography>
                         <Divider sx={{ my: 1 }} />
                         <Typography variant="subtitle1" gutterBottom>
-                          Advice Based on Score:
+                          Advice Based on Choices:
                         </Typography>
                         <Typography variant="body2" paragraph sx={{ pl: 2 }}>
                           {item.adviceText || "No specific advice available for this score range."}
