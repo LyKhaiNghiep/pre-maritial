@@ -61,11 +61,11 @@ const UserQuizzes = () => {
       });
       return;
     }
-    navigate(`/user/quiz/${quizId}`);
+    navigate(`/customer-home/quiz/${quizId}`);
   };
 
   const handleViewHistory = () => {
-    navigate('/user/quiz-history');
+    navigate('/customer-home/quiz-history');
   };
 
   return (
