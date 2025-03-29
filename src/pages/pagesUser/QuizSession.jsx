@@ -143,7 +143,7 @@ const QuizSession = () => {
   };
   
   const handleBackToQuizzes = () => {
-    navigate('/user/quizzes');
+    navigate('/customer-home/quizzes');
   };
   
   const calculateProgress = () => {

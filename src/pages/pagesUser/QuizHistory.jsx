@@ -51,7 +51,7 @@ const QuizHistory = () => {
   };
 
   const handleBackToQuizzes = () => {
-    navigate('/user/quizzes');
+    navigate('/customer-home/quizzes');
   };
 
   const formatDate = (dateString) => {
