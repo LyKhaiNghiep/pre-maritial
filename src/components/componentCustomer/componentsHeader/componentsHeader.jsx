@@ -81,7 +81,8 @@ function ComponentsHeader() {
             <Nav.Link as={NavLink} to="/customer-home/view-bookings">
               Bookings
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/user/quizzes">
+
+            <Nav.Link as={NavLink} to="/customer-home/quizzes">
               Quizzes
             </Nav.Link>
             {/* User dropdown */}

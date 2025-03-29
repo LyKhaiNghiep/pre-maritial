@@ -131,6 +131,9 @@ const App = () => {
                 element={<ScheduleTherapist />}
               />
               <Route path="confirm-booking" element={<ConfirmBookingPage />} />
+                <Route path="/customer-home/quizzes" element={<UserQuizzes />} />
+                <Route path="/customer-home/quiz/:quizId" element={<QuizSession />} />
+                <Route path="/customer-home/quiz-history" element={<QuizHistory />} />
             </Route>
           </Route>
 
