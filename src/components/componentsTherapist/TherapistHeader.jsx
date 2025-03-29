@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -19,7 +19,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 const TherapistHeader = () => {
   // Mock data for notifications (replace with API later)
   const unreadNotifications = 2;
-
+  const navigate = useNavigate();
   // State for profile dropdown
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -36,7 +36,9 @@ const TherapistHeader = () => {
   // Handle logout (mock function, replace with actual logout logic)
   const handleLogout = () => {
     console.log("Logging out...");
-    // Add actual logout logic here (e.g., clear auth token, redirect to login)
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
     handleProfileClose();
   };
 
