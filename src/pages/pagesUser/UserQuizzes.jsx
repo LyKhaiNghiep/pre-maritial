@@ -138,9 +138,6 @@ const UserQuizzes = () => {
                     </Typography>
                     <Divider sx={{ my: 2 }} />
                     <Box display="flex" justifyContent="space-between" alignItems="center">
-                      <Typography variant="body2">
-                        <strong>Questions:</strong> {quiz.questionsCount || quiz.quizQuestions?.length || 0}
-                      </Typography>
                       <Chip
                         label={`By: ${quiz.therapistName || 'Therapist'}`}
                         size="small"

@@ -190,12 +190,9 @@ const QuizSession = () => {
         
         <Card sx={{ mb: 4 }}>
           <CardContent>
-            <Typography variant="h5" gutterBottom>
-              Your Score: {quizResult.quizPoint || 0} points
-            </Typography>
             <Divider sx={{ my: 2 }} />
             <Typography variant="h6" gutterBottom>
-              Advice Based on Your Score:
+              Advice Based on Your Choice:
             </Typography>
             <Typography variant="body1" paragraph>
               {quizResult.adviceText || "No specific advice available for your score."}
